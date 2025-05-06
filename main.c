@@ -14,12 +14,14 @@ typedef struct
     char track_genre[100];
 } musica;
 
-/*Convierte los punteros void* a char*, ya que strcmp necesita cadenas.
-Usa strcmp, que:
-Retorna 0 si ambas cadenas son idénticas.
-La función retorna 1 (true) si las cadenas son iguales, y 0 (false) si no lo son.*/
-int is_equal_str(void *key1, void *key2) {
-    return strcmp((char *)key1, (char *)key2) == 0;
+int lower_than_str(void* key1, void* key2) {
+    return strcmp((char*)key1, (char*)key2) < 0;
+}
+
+/*Esta función compara dos punteros a float (usando void* para generalidad), 
+y determina si el valor apuntado por key1 es menor que el de key2.*/
+int lower_than_float(void* key1, void* key2) {
+    return *(float*)key1 < *(float*)key2;
 }
 
 void mostrarMenu()
@@ -39,35 +41,35 @@ void mostrarMenu()
 
 char **leer_linea_csv(FILE *archivo, char delimitador) 
 {
-    char **campos = NULL;  // Empezamos con NULL para la lista de campos
-    char linea[1024];      // Buffer para la línea leída
+    char **campos = NULL;// Empezamos con NULL para la lista de campos
+    char linea[1024];//para la línea leída
     int index = 0;
-    size_t capacidad = 10;  // Capacidad inicial para 10 campos
-    campos = malloc(sizeof(char*) * capacidad);  // Reserva memoria inicial
+    size_t capacidad = 10;//Una capacidad inicial para 10 campos
+    campos = malloc(sizeof(char*) * capacidad);//Reserva memoria inicial
 
     // Leer una línea del archivo
     if (fgets(linea, sizeof(linea), archivo) == NULL) 
     {
-        return NULL;  // Si no hay más líneas, retornamos NULL
+        return NULL;//Si no hay más líneas, retornamos NULL
     }
 
-    // Dividir la línea por el delimitador
+    //Dividir la línea por el delimitador
     char *campo = strtok(linea, &delimitador);
     while (campo != NULL) {
         if (index >= capacidad) 
-        {  // Si hemos alcanzado la capacidad, ampliamos el arreglo
-            capacidad *= 2;  // Doblamos la capacidad
-            campos = realloc(campos, sizeof(char*) * capacidad);  // Redimensionamos el arreglo
+        {  //Si hemos alcanzado la capacidad, ampliamos el arreglo
+            capacidad *= 2;//se dobla la capacidad
+            campos = realloc(campos, sizeof(char*) * capacidad);//Redimensionamos el arreglo
         }
 
-        campos[index] = malloc(strlen(campo) + 1);  // Reservamos memoria para el campo
+        campos[index] = malloc(strlen(campo) + 1);//Reservamos memoria para el campo
         strcpy(campos[index], campo);
         index++;
 
-        // Leer el siguiente campo
+        //Leer el siguiente campo
         campo = strtok(NULL, &delimitador);
     }
-    campos[index] = NULL;  // Finalizamos el arreglo con NULL
+    campos[index] = NULL;//Finaliza el arreglo con NULL
     return campos;
 }
 
