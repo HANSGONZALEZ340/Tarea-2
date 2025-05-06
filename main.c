@@ -47,7 +47,7 @@ char **leer_linea_csv(FILE *archivo, char delimitador)
     size_t capacidad = 10;//Una capacidad inicial para 10 campos
     campos = malloc(sizeof(char*) * capacidad);//Reserva memoria inicial
 
-    // Leer una línea del archivo
+    //Leer una línea del archivo
     if (fgets(linea, sizeof(linea), archivo) == NULL) 
     {
         return NULL;//Si no hay más líneas, retornamos NULL
